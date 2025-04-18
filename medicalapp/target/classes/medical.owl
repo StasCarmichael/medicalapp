@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://example.org/medical#"
+     xml:base="http://example.org/medical"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+     xmlns:swrlb="http://www.w3.org/2003/11/swrlb#">
+
+  <owl:Ontology rdf:about="http://example.org/medical"/>
+
+  <!-- Класи -->
+
+  <owl:Class rdf:about="#Patient"/>
+  <owl:Class rdf:about="#Doctor"/>
+  <owl:Class rdf:about="#Symptom"/>
+  <owl:Class rdf:about="#Diagnosis"/>
+  <owl:Class rdf:about="#Procedure"/>
+  <owl:Class rdf:about="#Medication"/>
+
+  <!-- Об'єктні властивості -->
+
+  <owl:ObjectProperty rdf:about="#assignedDoctor">
+    <rdfs:domain rdf:resource="#Patient"/>
+    <rdfs:range rdf:resource="#Doctor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasSymptom">
+    <rdfs:domain rdf:resource="#Patient"/>
+    <rdfs:range rdf:resource="#Symptom"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasDiagnosis">
+    <rdfs:domain rdf:resource="#Patient"/>
+    <rdfs:range rdf:resource="#Diagnosis"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasProcedure">
+    <rdfs:domain rdf:resource="#Patient"/>
+    <rdfs:range rdf:resource="#Procedure"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="#hasMedication">
+    <rdfs:domain rdf:resource="#Patient"/>
+    <rdfs:range rdf:resource="#Medication"/>
+  </owl:ObjectProperty>
+
+  <!-- Дататипові властивості -->
+
+  <owl:DatatypeProperty rdf:about="#hasFirstName">
+    <rdfs:domain rdf:resource="#Patient"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasLastName">
+    <rdfs:domain rdf:resource="#Patient"/>
+    <rdfs:range rdf:resource="xsd:string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="#hasAge">
+    <rdfs:domain rdf:resource="#Patient"/>
+    <rdfs:range rdf:resource="xsd:int"/>
+  </owl:DatatypeProperty>
+
+  <!-- Індивіди симптомів -->
+
+  <owl:NamedIndividual rdf:about="#Dyspnea">
+    <rdf:type rdf:resource="#Symptom"/>
+    <rdfs:label>задишка</rdfs:label>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="#Fainting">
+    <rdf:type rdf:resource="#Symptom"/>
+    <rdfs:label>непритомність</rdfs:label>
+  </owl:NamedIndividual>
+
+  <owl:NamedIndividual rdf:about="#Tachycardia">
+    <rdf:type rdf:resource="#Symptom"/>
+    <rdfs:label>прискорене серцебиття</rdfs:label>
+  </owl:NamedIndividual>
+
+  <!-- Індивід діагнозу -->
+
+  <owl:NamedIndividual rdf:about="#HypertrophicCardiomyopathy">
+    <rdf:type rdf:resource="#Diagnosis"/>
+    <rdfs:label>Гіпертрофічна кардіоміопатія</rdfs:label>
+  </owl:NamedIndividual>
+
+  <!-- SWRL-правило -->
+
+  <swrl:Imp>
+    <swrl:body>
+      <swrl:AtomList>
+        <rdf:first>
+          <swrl:IndividualPropertyAtom>
+            <swrl:propertyPredicate rdf:resource="#hasSymptom"/>
+            <swrl:argument1>
+              <swrl:Variable rdf:about="#p"/>
+            </swrl:argument1>
+            <swrl:argument2 rdf:resource="#Dyspnea"/>
+          </swrl:IndividualPropertyAtom>
+        </rdf:first>
+        <rdf:rest>
+          <swrl:AtomList>
+            <rdf:first>
+              <swrl:IndividualPropertyAtom>
+                <swrl:propertyPredicate rdf:resource="#hasSymptom"/>
+                <swrl:argument1>
+                  <swrl:Variable rdf:about="#p"/>
+                </swrl:argument1>
+                <swrl:argument2 rdf:resource="#Fainting"/>
+              </swrl:IndividualPropertyAtom>
+            </rdf:first>
+            <rdf:rest>
+              <swrl:AtomList>
+                <rdf:first>
+                  <swrl:IndividualPropertyAtom>
+                    <swrl:propertyPredicate rdf:resource="#hasSymptom"/>
+                    <swrl:argument1>
+                      <swrl:Variable rdf:about="#p"/>
+                    </swrl:argument1>
+                    <swrl:argument2 rdf:resource="#Tachycardia"/>
+                  </swrl:IndividualPropertyAtom>
+                </rdf:first>
+                <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+              </swrl:AtomList>
+            </rdf:rest>
+          </swrl:AtomList>
+        </rdf:rest>
+      </swrl:AtomList>
+    </swrl:body>
+    <swrl:head>
+      <swrl:AtomList>
+        <rdf:first>
+          <swrl:IndividualPropertyAtom>
+            <swrl:propertyPredicate rdf:resource="#hasDiagnosis"/>
+            <swrl:argument1>
+              <swrl:Variable rdf:about="#p"/>
+            </swrl:argument1>
+            <swrl:argument2 rdf:resource="#HypertrophicCardiomyopathy"/>
+          </swrl:IndividualPropertyAtom>
+        </rdf:first>
+        <rdf:rest rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"/>
+      </swrl:AtomList>
+    </swrl:head>
+  </swrl:Imp>
+
+</rdf:RDF>
